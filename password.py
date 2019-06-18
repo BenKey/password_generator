@@ -3,13 +3,13 @@ import getopt
 import random
 import sys
 
-__version__ = '2.0.1'
+__version__ = '2.0.2'
 
 __doc__ = """
 
 Password generator version %(version)s,
 Copyright 2017 by ccminer [https://github.com/ccminer-net].
-Copyright 2018 by Ben Key [https://github.com/BenKey].
+Copyright 2019 by Ben Key [https://github.com/BenKey].
 
 Password generator is a simple python script that generates a complex pasword.
 
@@ -37,7 +37,7 @@ __version_info__ = """
 
 Password generator version %(version)s,
 Copyright 2017 by ccminer [https://github.com/ccminer-net].
-Copyright 2018 by Ben Key [https://github.com/BenKey].
+Copyright 2019 by Ben Key [https://github.com/BenKey].
 
 Password generator is a simple python script that generates a complex pasword.
 
@@ -68,7 +68,7 @@ def ParseCommandLine():
   alphabet = default_alphabet
   pw_length = default_pw_length
   if (len(sys.argv) == 1):
-    showUsage = True
+    showUsage = False
   elif (len(sys.argv) > 1):
     arg1 = sys.argv[1]
     arg1 = arg1.lower()
@@ -96,11 +96,11 @@ def ParseCommandLine():
         print(err) # will print something like "option -a not recognized"
         exitCode = 2
         showUsage = True
-    args = Arguments(
-      ExitCode=exitCode, ShowUsage=showUsage,
-      ShowVersion=showVersion,
-      Alphabet=alphabet, PasswordLength=pw_length)
-    return args
+  args = Arguments(
+    ExitCode=exitCode, ShowUsage=showUsage,
+    ShowVersion=showVersion,
+    Alphabet=alphabet, PasswordLength=pw_length)
+  return args
 
 def main():
   """The main entry point for Password generator."""
@@ -115,13 +115,15 @@ def main():
   for i in range(args.PasswordLength):
     next_index = random.randrange(len(args.Alphabet))
     mypw = mypw + args.Alphabet[next_index]
-  # replace 1 or 2 characters with a number
-  for i in range(random.randrange(1, 3)):
+  # replace 2 characters with a number, if you wish to replace more characters increase "for i in range(random.randrange(1,[THIS NUMBER]))"
+  for i in range(random.randrange(1, 4)):
     replace_index = random.randrange(len(mypw) // 2)
     mypw = mypw[0 : replace_index] + str(random.randrange(10)) + mypw[replace_index + 1:]
-  # replace 1 or 2 letters with an uppercase letter
-  for i in range(random.randrange(1, 3)):
+  # replace 2 letters with an uppercase letter, if you wish to replace more characters increase "for i in range(random.randrange(1,[THIS NUMBER]))"
+  for i in range(random.randrange(1, 4)):
     replace_index = random.randrange(len(mypw) // 2, len(mypw))
+    while (not mypw[replace_index].islower() and replace_index < len(mypw)):
+      replace_index += 1
     mypw = mypw[0 : replace_index] + mypw[replace_index].upper() + mypw[replace_index + 1:]
   print(mypw)
 
